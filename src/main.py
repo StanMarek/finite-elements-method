@@ -5,7 +5,7 @@ from model.node import Node
 
 def main():
     grid = GRID(0.2, 0.1, 5, 4)
-    grid.print()
+    grid.display()
 
     return
 
