@@ -11,7 +11,6 @@ class GRID:
 		self.nE = (nH-1)*(nB-1)
 		self.nodes = [Node]*self.nN
 		self.elements = [Element]*self.nE
-		
 		self.deltaX = B/(nB-1)
 		self.deltaY = H/(nH-1)
 
@@ -21,15 +20,6 @@ class GRID:
 				self.nodes[node] = Node(x * self.deltaX, y * self.deltaY)
 				node += 1
 
-		""" 
-		Another nodes init
-		
-		for node in range(len(self.nodes)):
-			for x in range(nB):
-				for y in range(nH):
-					self.nodes[node] = Node(x * deltaX, y * deltaY)
-					node += 1
-		"""	
 		next = 1
 		for i in range(len(self.elements)):
 			if next % nH == 0:
