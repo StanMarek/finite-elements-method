@@ -25,39 +25,43 @@ class Element4_2D:
         self.matrix_dNdKsi[i][j] = dNdKsi(eta[i])[j]
         self.matrix_dNdEta[i][j] = dNdEta(ksi[i])[j]
     
-  def print(self):
+  def display(self):
     print('Matrix dN/dKsi\n', np.matrix(self.matrix_dNdKsi))
     print('Matrix dN/dEta\n', np.matrix(self.matrix_dNdEta))
 
 
+def printMatrix(matrix):
+  print(np.matrix(matrix))
 
-def jacobian(e42d: Element4_2D, grid: Grid):
-  dXdKsi = [0.0] * e42d.nPoints
-  dYdEta = [0.0] * e42d.nPoints
-  J = [[[0 for x in range(2)] for y in range(2)] for z in range(e42d.nPoints)]
-  for i in range(e42d.nPoints):
-    for j in range(4):
-      dXdKsi[i] += X[j] * e42d.matrix_dNdKsi[i][j] 
-      dYdEta[i] += Y[j] * e42d.matrix_dNdEta[i][j]
-      J[i][0][0] = dXdKsi[i]
-      J[i][1][1] = dYdEta[i]
 
-  print("dXdKsi", np.matrix(dXdKsi))
-  print("dYdEta", np.matrix(dYdEta))
+def jacobian(nOfElem, nOfIP, e42d: Element4_2D, grid: Grid):
+  dXdKsi = dYdEta = dXdEta = dYdKsi = 0.0
+
+  for j in range(4):
+    # dXdKsi += e42d.matrix_dNdKsi[nOfIP][j] * grid.nodes[grid.elements[nOfElem].ID[j] -1].x
+    # dYdEta += e42d.matrix_dNdEta[nOfIP][j] * grid.nodes[grid.elements[nOfElem].ID[j] -1].y
+    # dXdEta += e42d.matrix_dNdEta[nOfIP][j] * grid.nodes[grid.elements[nOfElem].ID[j] -1].x
+    # dYdKsi += e42d.matrix_dNdEta[nOfIP][j] * grid.nodes[grid.elements[nOfElem].ID[j] -1].y
+    dXdKsi += X[j] * e42d.matrix_dNdKsi[nOfIP][j] 
+    dYdEta += Y[j] * e42d.matrix_dNdEta[nOfIP][j]
+
+  J = transposeJ = [[0 for y in range(2)] for x in range(2)]
+  J[0][0] = dXdKsi;
+  J[0][1] = dYdKsi;
+  J[1][0] = dXdEta;
+  J[1][1] = dYdEta;
+
+  detJ = (J[0][0] * J[1][1]) - (J[0][1] * J[1][0])
+  inverseDetJ = 1/detJ
+
+  transposeJ[0][0] = J[1][1]
+  transposeJ[0][1] = - J[0][1]
+  transposeJ[1][0] = - J[1][0]
+  transposeJ[1][1] = J[0][0]
   
-  for i in range(e42d.nPoints):
-    print(f"matrix for point {i + 1}\n", np.matrix(J[i]))
-   
-  detJ = [0.0] * e42d.nPoints
-  inverseDetJ = [0] * e42d.nPoints
-  for i in range(len(detJ)):
-    detJ[i] = J[i][0][0] * J[i][1][1]
-    inverseDetJ[i] = 1/detJ[i]
+  for i in range(2):
+    for j in range(2):
+      J[i][j] = inverseDetJ * transposeJ[i][j]
 
-  print(detJ)
-  print(inverseDetJ)
-
-  # for i in range(grid.nE):
-  #   for j in range(e42d.nPoints):
-  #     print(1)
-
+  printMatrix(J)
+  return J

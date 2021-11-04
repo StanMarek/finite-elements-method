@@ -6,7 +6,7 @@ threePointKeys = [(-math.sqrt(3/5)), (0), (math.sqrt(3/5))]
 twoPointValues = [1, 1]
 threePointValues = [(5/9), (8/9), (5/9)]
 
-def fun_x(x):
+def fun_x(x): 
   return 5*x**2+3*x+6
 
 def fun_xy(x, y):
