@@ -2,6 +2,8 @@ import numpy as np
 from util.function import twoPointKeys
 from model.grid import Grid
 
+matrix = list[list[any]]
+
 def dNdKsi(eta):
   return [(-0.25*(1-eta)), (0.25*(1-eta)), (0.25*(1+eta)), (-0.25*(1+eta))]
 
@@ -49,7 +51,8 @@ def jacobian(nOfElem, nOfIP, e42d: Element4_2D, grid: Grid):
     dXdKsi += X[j] * e42d.matrix_dNdKsi[nOfIP][j] 
     dYdEta += Y[j] * e42d.matrix_dNdEta[nOfIP][j]
 
-  J = transposeJ = [[0 for y in range(2)] for x in range(2)]
+  J = [[0 for y in range(2)] for x in range(2)]
+  transposeJ = [[0 for y in range(2)] for x in range(2)]
   J[0][0] = dXdKsi
   J[0][1] = dYdKsi
   J[1][0] = dXdEta
@@ -67,22 +70,63 @@ def jacobian(nOfElem, nOfIP, e42d: Element4_2D, grid: Grid):
     for j in range(2):
       J[i][j] = inverseDetJ * transposeJ[i][j]
 
-  printMatrix(J)
-  return J, detJ
+  return J
 
-def calcHMatrix(e42d: Element4_2D, J, detJ, kT):
-  ndN = 4
-  matrix_dNdX = [[0.0 for x in range(ndN)] for y in range(e42d.nPoints)] 
-  matrix_dNdY = [[0.0 for x in range(ndN)] for y in range(e42d.nPoints)]
- 
-  for ip in range(e42d.nPoints):
-    for j in range(ndN):
-      matrix_dNdX[ip][j] = J[0][0] * e42d.matrix_dNdKsi[ip][j] + J[0][1] * e42d.matrix_dNdEta[ip][j]
-      matrix_dNdY[ip][j] = J[1][0] * e42d.matrix_dNdKsi[ip][j] + J[1][1] * e42d.matrix_dNdEta[ip][j]
-
-  H_ipN = [[0.0 for x in range(4)] for y in range(4)]
-  H_ip = [H_ipN] * e42d.nPoints 
+def dNidX(dNdEta: matrix, dNdKsi: matrix, jac: matrix, nOfIP):
+  dNidX = [0 for x in range(4)]
 
   for i in range(4):
+    dNidX[i] = jac[0][0] * dNdKsi[nOfIP][i] + jac[0][1] * dNdEta[nOfIP][i]
+  return dNidX
+
+def dNidY(dNdEta: matrix, dNdKsi: matrix, jac: matrix, nOfIP):
+  dNidY = [0 for x in range(4)]
+
+  for i in range(4):
+    dNidY[i] = jac[1][0] * dNdKsi[nOfIP][i] + jac[1][1] * dNdEta[nOfIP][i]
+
+  return dNidY
+
+def dNdX(e42d: Element4_2D, jac: matrix):
+  ip = e42d.nPoints
+  dNdX = [[] for j in range(ip)]
+
+  for i in range(ip):
+    dNdX[i] = dNidX(e42d.matrix_dNdEta, e42d.matrix_dNdKsi, jac, i)
+
+  return dNdX
+
+def dNdY(e42d: Element4_2D, jac: matrix):
+  ip = e42d.nPoints
+  dNdY = [[] for j in range(ip)]
+
+  for i in range(ip):
+    dNdY[i] = dNidY(e42d.matrix_dNdEta, e42d.matrix_dNdKsi, jac, i)
+
+  return dNdY
+
+def calculateHMatrixForIP(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
+  size = len(dNdX)
+  HdNdX = [[0 for x in range(size)] for y in range(size)]
+  HdNdY = [[0 for x in range(size)] for y in range(size)] 
+  Hi = [[0 for x in range(size)] for y in range(size)]
+
+  for i in range(size):
+    for j in range(size):
+      HdNdX[i][j] = dNdX[nOfIp][i] * dNdX[nOfIp][j] 
+      HdNdY[i][j] = dNdY[nOfIp][i] * dNdY[nOfIp][j] 
+      Hi[i][j] = k * (HdNdX[i][j] + HdNdY[i][j]) * dV
+      
+  return Hi
+
+def calculateHMatrixForElem(e42d: Element4_2D, jac: matrix, dV, k):
+  H = [[0 for x in range(e42d.nPoints)] for y in range(e42d.nPoints)] 
+  _dNdX = dNdX(e42d, jac)
+  _dNdY = dNdY(e42d, jac)
+  
+  for i in range(4):
     for j in range(4):
-      H_ipN[i][j] = matrix_dNdX[i][j] * matrix_dNdX[i][j]
+      for l in range(4):
+        H[i][j] += calculateHMatrixForIP(_dNdX, _dNdY, dV, k, l)[i][j]
+    
+  return H
