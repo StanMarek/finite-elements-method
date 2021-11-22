@@ -1,25 +1,30 @@
 import math
 
-twoPointKeys = [(-1/math.sqrt(3)), (1/math.sqrt(3))]
-threePointKeys = [(-math.sqrt(3/5)), (0), (math.sqrt(3/5))]
+import numpy as np
 
-twoPointValues = [1, 1]
-threePointValues = [(5/9), (8/9), (5/9)]
+TWO_POINT_KEYS = [(-1/math.sqrt(3)), (1/math.sqrt(3))]
+THREE_POINT_KEYS = [(-math.sqrt(3/5)), 0, (math.sqrt(3 / 5))]
 
-def fun_x(x): 
+TWO_POINT_VALUES = [1, 1]
+THREE_POINT_VALUES = [(5/9), (8/9), (5/9)]
+
+def print_matrix(matrix):
+  np.set_printoptions(precision=5)
+  print(np.matrix(matrix))
+
+def fun_x(x):
   return 5*x**2+3*x+6
 
 def fun_xy(x, y):
   return 5*x**2*y**2+3*x*y+6
 
-
 def gauss_1dim(points):
   if points == 2:
-    outcome = twoPointValues[0]*fun_x(twoPointKeys[0]) + twoPointValues[1]*fun_x(twoPointKeys[1]) 
+    outcome = TWO_POINT_VALUES[0] * fun_x(TWO_POINT_KEYS[0]) + TWO_POINT_VALUES[1] * fun_x(TWO_POINT_KEYS[1])
     return outcome
 
   elif points == 3:
-    outcome = threePointValues[0]*fun_x(threePointKeys[0]) + threePointValues[1]*fun_x(threePointKeys[1]) + threePointValues[2]*fun_x(threePointKeys[2])
+    outcome = THREE_POINT_VALUES[0] * fun_x(THREE_POINT_KEYS[0]) + THREE_POINT_VALUES[1] * fun_x(THREE_POINT_KEYS[1]) + THREE_POINT_VALUES[2] * fun_x(THREE_POINT_KEYS[2])
     return outcome
 
   else:
@@ -31,16 +36,40 @@ def gauss_2dim(points):
     outcome = 0
     for y in range(points):
       for x in range(points):
-        outcome += twoPointValues[x] * twoPointValues[y] * fun_xy(x = twoPointKeys[x], y = twoPointKeys[y])
-    return outcome  
+        outcome += TWO_POINT_VALUES[x] * TWO_POINT_VALUES[y] * fun_xy(THREE_POINT_KEYS[x], THREE_POINT_KEYS[y])
+    return outcome
 
   elif points == 3: #9
     outcome = 0
     for y in range(points):
       for x in range(points):
-        outcome += threePointValues[x] * threePointValues[y] * fun_xy(x = threePointKeys[x], y = threePointKeys[y])
+        outcome += THREE_POINT_VALUES[x] * THREE_POINT_VALUES[y] * fun_xy(THREE_POINT_KEYS[x], THREE_POINT_VALUES[y])
     return outcome
-    
+
   else:
     print('Wrong points input')
     return -math.inf
+
+def dN_dKsi(eta):
+  return [
+    (-0.25*(1-eta)), 
+    (0.25*(1-eta)), 
+    (0.25*(1+eta)), 
+    (-0.25*(1+eta))
+  ]
+
+def dN_dEta(ksi):
+  return [
+    (-0.25*(1-ksi)), 
+    (-0.25*(1+ksi)), 
+    (0.25*(1+ksi)), 
+    (0.25*(1-ksi))
+  ]
+
+def shape_function(eta, ksi):
+  return [
+    (0.25*(1-ksi)*(1-eta)),
+    (0.25*(1+ksi)*(1-eta)),
+    (0.25*(1+ksi)*(1+eta)),
+    (0.25*(1-ksi)*(1+eta)),
+  ]

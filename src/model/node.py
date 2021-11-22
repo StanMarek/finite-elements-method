@@ -1,13 +1,12 @@
-
+matrix = list[list[any]]
 class Node: 
-  x = 0
-  y = 0
   def __init__(self, x, y):
     self.x = x
     self.y = y
+    self.bc = 0
+
+  def set_bc(self, bc):
+    self.bc = bc
 
   def __str__(self) -> str:
-      return str("x={:.3f} y={:.3f}".format(self.x, self.y))
-
-  def printNode(self):
-    print(f'x={self.x} y={self.y}')
+      return str("x={:.3f} y={:.3f} bc={}".format(self.x, self.y, self.bc))
