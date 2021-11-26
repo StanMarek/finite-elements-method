@@ -66,7 +66,7 @@ def dN_dEta(ksi):
     (0.25*(1-ksi))
   ]
 
-def shape_function(eta, ksi):
+def shape_function(ksi, eta):
   return [
     (0.25*(1-ksi)*(1-eta)),
     (0.25*(1+ksi)*(1-eta)),
