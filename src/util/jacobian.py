@@ -3,7 +3,10 @@ from model.universal_element import X, Y, UniversalElement
 
 
 def jacobian(nOfElem, nOfIP, e42d: UniversalElement, grid: Grid):
-  dXdKsi = dYdEta = dXdEta = dYdKsi = 0.0
+  dXdKsi = 0.0
+  dYdEta = 0.0
+  dXdEta = 0.0
+  dYdKsi = 0.0
 
   for j in range(4):
     # dev

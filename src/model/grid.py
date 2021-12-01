@@ -1,5 +1,6 @@
 from model.element import Element
 from model.node import Node
+import numpy as np
 
 class Grid:
 	def __init__(self, H, B, nH, nB):

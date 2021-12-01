@@ -1,17 +1,18 @@
+import numpy as np
 from model.grid import Grid
 from model.universal_element import X, Y, UniversalElement
 
 matrix = [[any]]
 
 def dNi_dX(e42d: UniversalElement, jac: matrix, nOfIP):
-  dNidX = [0 for x in range(4)]
+  dNidX = np.zeros(4)
 
   for i in range(4):
     dNidX[i] = jac[0][0] * e42d.matrix_dNd_Ksi[nOfIP][i] + jac[0][1] * e42d.matrix_dNd_Eta[nOfIP][i]
   return dNidX
 
 def dNi_dY(e42d: UniversalElement, jac: matrix, nOfIP):
-  dNidY = [0 for x in range(4)]
+  dNidY = np.zeros(5)
 
   for i in range(4):
     dNidY[i] = jac[1][0] * e42d.matrix_dNd_Ksi[nOfIP][i] + jac[1][1] * e42d.matrix_dNd_Eta[nOfIP][i]

@@ -63,14 +63,14 @@ class UniversalElementSide:
       self.points[1].ksi,
       self.points[0].eta,
       self.points[1].eta,
-    )/2  
+    )/2 
     
 class UniversalElement:
   def __init__(self, number_of_points):
     nd_n = 4
     self.nPoints = number_of_points ** 2
-    self.matrix_dNd_Ksi = [[0 for x in range(self.nPoints)] for y in range(self.nPoints)]
-    self.matrix_dNd_Eta = [[0 for x in range(self.nPoints)] for y in range(self.nPoints)]
+    self.matrix_dNd_Ksi = np.zeros((self.nPoints, self.nPoints))
+    self.matrix_dNd_Eta = np.zeros((self.nPoints, self.nPoints))
     self.sides = [UniversalElementSide] * 4
     
     for i in range(self.nPoints):
@@ -80,7 +80,7 @@ class UniversalElement:
 
     for i in range(4):
       self.sides = UniversalElementSide(number_of_points, i)
-
+    
   def display(self):
     print('Matrix dN/dKsi')
     print_matrix(self.matrix_dNd_Ksi)

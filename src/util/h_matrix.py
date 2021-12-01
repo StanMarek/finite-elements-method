@@ -1,10 +1,11 @@
+import numpy as np
 from util.integral import matrix
 
 def calculate_h_matrix_for_ip(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
   size = len(dNdX)
-  HdNdX = [[0 for x in range(size)] for y in range(size)]
-  HdNdY = [[0 for x in range(size)] for y in range(size)] 
-  Hi = [[0 for x in range(size)] for y in range(size)]
+  HdNdX = np.zeros((size, size))
+  HdNdY = np.zeros((size, size)) 
+  Hi = np.zeros((size, size))
 
   for i in range(size):
     for j in range(size):
@@ -27,7 +28,7 @@ def calculate_h_matrix_for_ip(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
 #   return H
 
 def calculate_h_matrix_for_element(Hi):
-  H = [[0 for x in range(4)] for y in range(4)] 
+  H = np.zeros((4, 4))
 
   for i in range(4):
     for j in range(4):
@@ -35,3 +36,16 @@ def calculate_h_matrix_for_element(Hi):
         H[i][j] += Hi[k][i][j] 
 
   return H
+
+def calculate_hc_matrix_for_ip(N):
+  hc = [[any]] * 4
+  n = 0
+  for i in range(4):
+    for j in range(4):
+      hc[i][j] = N[n] * N[j]
+    n += 1   
+  print(hc)
+  return hc
+
+def calculate_hbc_matrix_for_element():
+  return
