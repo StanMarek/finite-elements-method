@@ -44,7 +44,7 @@ def main() -> None:
             else:
                 print(0)
 
-        h_bc = calculate_hbc_for_element(det_j_side, side_choice, el)
+        h_bc = calculate_hbc_for_element(det_j_side, side_choice, el, k_t)
         grid.elements[element_number].set_Hbc(h_bc)
 
     for i in range(grid.nE):
@@ -54,14 +54,14 @@ def main() -> None:
         print_matrix(grid.elements[i].H_bc)
 
 
-def calculate_hbc_for_element(det_j, sides_with_bc, universal_element: UniversalElement):
+def calculate_hbc_for_element(det_j, sides_with_bc, universal_element: UniversalElement, k_t):
     sides_matrix_array = []
     sum = np.zeros((4, 4))
     for i in range(4):
         if sides_with_bc[i] == 1:
             side_number = i
             side_hbc = calculate_hbc_for_side(
-                det_j[side_number], side_number, universal_element)
+                det_j[side_number], side_number, universal_element, k_t)
             sides_matrix_array.append(side_hbc)
 
     print("ilosc bokow z warunkiem brzegowym: {}".format(len(sides_matrix_array)))
@@ -75,7 +75,7 @@ def calculate_hbc_for_element(det_j, sides_with_bc, universal_element: Universal
     return sum
 
 
-def calculate_hbc_for_side(det_j, side_number: int, element: UniversalElement):
+def calculate_hbc_for_side(det_j, side_number: int, element: UniversalElement, k_t):
     hbc_side = np.zeros((4, 4))
     hbc_point_1 = calculate_hbc_for_ip(
         element.sides[side_number].points[0].N, element.sides[side_number].points[0].weight)
@@ -84,7 +84,8 @@ def calculate_hbc_for_side(det_j, side_number: int, element: UniversalElement):
 
     for i in range(4):
         for j in range(4):
-            hbc_side[i][j] = (hbc_point_1[i][j] + hbc_point_2[i][j]) * det_j
+            hbc_side[i][j] = (hbc_point_1[i][j] +
+                              hbc_point_2[i][j]) * det_j * k_t
 
     print("Hbc dla sciany")
     print_matrix(hbc_side)
