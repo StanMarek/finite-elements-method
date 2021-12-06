@@ -24,7 +24,8 @@ def fun_xy(x, y):
 
 def gauss_1dim(points):
     if points == 2:
-        outcome = TWO_POINT_VALUES[0] * fun_x(TWO_POINT_KEYS[0]) + TWO_POINT_VALUES[1] * fun_x(TWO_POINT_KEYS[1])
+        outcome = TWO_POINT_VALUES[0] * fun_x(
+            TWO_POINT_KEYS[0]) + TWO_POINT_VALUES[1] * fun_x(TWO_POINT_KEYS[1])
         return outcome
 
     elif points == 3:
@@ -42,7 +43,8 @@ def gauss_2dim(points):
         outcome = 0
         for y in range(points):
             for x in range(points):
-                outcome += TWO_POINT_VALUES[x] * TWO_POINT_VALUES[y] * fun_xy(THREE_POINT_KEYS[x], THREE_POINT_KEYS[y])
+                outcome += TWO_POINT_VALUES[x] * TWO_POINT_VALUES[y] * \
+                    fun_xy(THREE_POINT_KEYS[x], THREE_POINT_KEYS[y])
         return outcome
 
     elif points == 3:  # 9

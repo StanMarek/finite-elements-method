@@ -42,6 +42,10 @@ class Point:
 
         for i in range(4):
             self.N[i] = shape_function(self.ksi, self.eta)[i]
+        print("Point from UE - N:", self.N)
+        print("Point from UE - ksi:", self.ksi)
+        print("Point from UE - eta:", self.eta)
+        print("Point from UE - w:", self.weight)
 
 
 class UniversalElementSide:
@@ -71,6 +75,7 @@ class UniversalElementSide:
             self.points[0].eta,
             self.points[1].eta,
         )/2
+        print("Side from UE - detJ:", self.det_j)
 
 
 class UniversalElement:

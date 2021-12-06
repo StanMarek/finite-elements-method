@@ -2,7 +2,7 @@ import numpy as np
 from util.integral import matrix
 
 
-def calculate_h_matrix_for_ip(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
+def calculate_h_for_ip(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
     size = len(dNdX)
     HdNdX = np.zeros((size, size))
     HdNdY = np.zeros((size, size))
@@ -29,7 +29,7 @@ def calculate_h_matrix_for_ip(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
 #   return H
 
 
-def calculate_h_matrix_for_element(Hi):
+def calculate_h_for_element(Hi):
     H = np.zeros((4, 4))
 
     for i in range(4):

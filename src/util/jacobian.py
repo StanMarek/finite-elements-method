@@ -10,14 +10,14 @@ def jacobian(nOfElem, nOfIP, e42d: UniversalElement, grid: Grid):
 
     for j in range(4):
         # dev
-        # nodeId = grid.elements[nOfElem].ID[j] - 1
-        # dXdKsi += e42d.matrix_dNd_Ksi[nOfIP][j] * grid.nodes[nodeId].x
-        # dYdEta += e42d.matrix_dNd_Eta[nOfIP][j] * grid.nodes[nodeId].y
-        # dXdEta += e42d.matrix_dNd_Eta[nOfIP][j] * grid.nodes[nodeId].x
-        # dYdKsi += e42d.matrix_dNd_Ksi[nOfIP][j] * grid.nodes[nodeId].y
+        nodeId = grid.elements[nOfElem].ID[j] - 1
+        dXdKsi += e42d.matrix_dNd_Ksi[nOfIP][j] * grid.nodes[nodeId].x
+        dYdEta += e42d.matrix_dNd_Eta[nOfIP][j] * grid.nodes[nodeId].y
+        dXdEta += e42d.matrix_dNd_Eta[nOfIP][j] * grid.nodes[nodeId].x
+        dYdKsi += e42d.matrix_dNd_Ksi[nOfIP][j] * grid.nodes[nodeId].y
         # test
-        dXdKsi += e42d.matrix_dNd_Ksi[nOfIP][j] * X[j]
-        dYdEta += e42d.matrix_dNd_Eta[nOfIP][j] * Y[j]
+        # dXdKsi += e42d.matrix_dNd_Ksi[nOfIP][j] * X[j]
+        # dYdEta += e42d.matrix_dNd_Eta[nOfIP][j] * Y[j]
 
     J = [[0 for y in range(2)] for x in range(2)]
     transpose_j = [[0 for y in range(2)] for x in range(2)]
