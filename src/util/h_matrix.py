@@ -1,8 +1,8 @@
 import numpy as np
-from util.integral import matrix
 
+from util.const import K_T
 
-def calculate_h_for_ip(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
+def calculate_h_for_ip(dNdX, dNdY, dV, nOfIp):
     size = len(dNdX)
     HdNdX = np.zeros((size, size))
     HdNdY = np.zeros((size, size))
@@ -12,7 +12,7 @@ def calculate_h_for_ip(dNdX: matrix, dNdY: matrix, dV, k, nOfIp):
         for j in range(size):
             HdNdX[i][j] = dNdX[nOfIp][i] * dNdX[nOfIp][j]
             HdNdY[i][j] = dNdY[nOfIp][i] * dNdY[nOfIp][j]
-            Hi[i][j] = k * (HdNdX[i][j] + HdNdY[i][j]) * dV
+            Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV
 
     return Hi
 

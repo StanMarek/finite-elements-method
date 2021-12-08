@@ -1,6 +1,6 @@
-from model.universal_element import *
-
-
+import numpy as np
+from model.universal_element import element_side_border
+from util.function import pithagorean_distance
 class Element:
     def __init__(self, id):
         self.ID = id
@@ -33,7 +33,7 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[1]-1].x,
             grid.nodes[grid.elements[i].ID[0]-1].y,
             grid.nodes[grid.elements[i].ID[1]-1].y
-        )
+        )/2
     if (grid.nodes[grid.elements[i].ID[1]-1].bc == 1 and
             grid.nodes[grid.elements[i].ID[2]-1].bc == 1):
         side_choice[element_side_border["R"]] = 1
@@ -42,7 +42,7 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[2]-1].x,
             grid.nodes[grid.elements[i].ID[1]-1].y,
             grid.nodes[grid.elements[i].ID[2]-1].y
-        )
+        )/2
     if (grid.nodes[grid.elements[i].ID[2]-1].bc == 1 and
             grid.nodes[grid.elements[i].ID[3]-1].bc == 1):
         side_choice[element_side_border["T"]] = 1
@@ -51,7 +51,7 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[3]-1].x,
             grid.nodes[grid.elements[i].ID[2]-1].y,
             grid.nodes[grid.elements[i].ID[3]-1].y
-        )
+        )/2
     if (grid.nodes[grid.elements[i].ID[0]-1].bc == 1 and
             grid.nodes[grid.elements[i].ID[3]-1].bc == 1):
         side_choice[element_side_border["L"]] = 1
@@ -60,6 +60,6 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[3]-1].x,
             grid.nodes[grid.elements[i].ID[0]-1].y,
             grid.nodes[grid.elements[i].ID[3]-1].y
-        )
-
+        )/2
+    #print("DET J", side_det_j)
     return side_det_j, side_choice

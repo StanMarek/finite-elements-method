@@ -1,12 +1,8 @@
 import math
 
 import numpy as np
-
-TWO_POINT_KEYS = [(-1 / math.sqrt(3)), (1 / math.sqrt(3))]
-THREE_POINT_KEYS = [(-math.sqrt(3 / 5)), 0, (math.sqrt(3 / 5))]
-
-TWO_POINT_VALUES = [1, 1]
-THREE_POINT_VALUES = [(5 / 9), (8 / 9), (5 / 9)]
+from util.const import (THREE_POINT_KEYS, THREE_POINT_VALUES, TWO_POINT_KEYS,
+                        TWO_POINT_VALUES)
 
 
 def print_matrix(matrix):
@@ -85,3 +81,49 @@ def shape_function(ksi, eta):
         (0.25 * (1 + ksi) * (1 + eta)),
         (0.25 * (1 - ksi) * (1 + eta)),
     ]
+
+
+def pithagorean_distance(x_1, x_2, y_1, y_2):
+    x_diff = x_2 - x_1
+    y_diff = y_2 - y_1
+    return math.sqrt(
+        pow(x_diff, 2) + pow(y_diff, 2)
+    )
+
+
+def multiply_vector_scalar(vector, scalar):
+    multiplied = [float] * len(vector)
+    for i in range(len(vector)):
+        multiplied[i] = vector[i] * scalar
+
+    return multiplied
+
+    
+def multiply_vector_vectort(vector):
+    size = len(vector)
+    multiplied = np.zeros((size, size))
+
+    for i in range(size):
+        for j in range(size):
+            multiplied[i][j] += vector[i] * vector[j]
+
+    # print("mulitplied vector")
+    # print_matrix(multiplied)
+
+    return multiplied
+
+
+def agregation(grid):
+    h = np.zeros((grid.nN, grid.nN))
+    p = np.zeros(grid.nN)
+
+    for element_number in range(grid.nE):
+        element = grid.elements[element_number]
+        id = element.ID
+        for i in range(4):
+            for j in range(4):
+                h[id[i]-1][id[j]-1] += element.H[i][j] + element.H_bc[i][j]
+
+            p[id[i]-1] += element.P[i]
+
+    return h, p

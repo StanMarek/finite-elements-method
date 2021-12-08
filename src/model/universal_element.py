@@ -1,15 +1,15 @@
-from math import sqrt
-
 import numpy as np
-from util.function import (TWO_POINT_KEYS, dN_dEta, dN_dKsi, print_matrix,
-                           shape_function)
+
+from util.const import TWO_POINT_KEYS
+from util.function import (dN_dEta, dN_dKsi, print_matrix,
+                               shape_function)
 
 eta = [TWO_POINT_KEYS[0], TWO_POINT_KEYS[0],
        TWO_POINT_KEYS[1], TWO_POINT_KEYS[1]]
 ksi = [TWO_POINT_KEYS[0], TWO_POINT_KEYS[1],
        TWO_POINT_KEYS[1], TWO_POINT_KEYS[0]]
-X = [0, 0.025, 0.025, 0]
-Y = [0, 0, 0.025, 0.025]
+# X = [0, 0.025, 0.025, 0]
+# Y = [0, 0, 0.025, 0.025]
 
 """
 B - Bottom
@@ -25,14 +25,6 @@ element_side_border = {
 }
 
 
-def pithagorean_distance(x_1, x_2, y_1, y_2):
-    x_diff = x_2 - x_1
-    y_diff = y_2 - y_1
-    return sqrt(
-        pow(x_diff, 2) + pow(y_diff, 2)
-    )
-
-
 class Point:
     def __init__(self, x, y, v):
         self.ksi = x
@@ -42,10 +34,10 @@ class Point:
 
         for i in range(4):
             self.N[i] = shape_function(self.ksi, self.eta)[i]
-        print("Point from UE - N:", self.N)
-        print("Point from UE - ksi:", self.ksi)
-        print("Point from UE - eta:", self.eta)
-        print("Point from UE - w:", self.weight)
+        # print("Point from UE - N:", self.N)
+        # print("Point from UE - ksi:", self.ksi)
+        # print("Point from UE - eta:", self.eta)
+        # print("Point from UE - w:", self.weight)
 
 
 class UniversalElementSide:
@@ -69,33 +61,34 @@ class UniversalElementSide:
                     v=1
                 )
 
-        self.det_j = pithagorean_distance(
-            self.points[0].ksi,
-            self.points[1].ksi,
-            self.points[0].eta,
-            self.points[1].eta,
-        )/2
-        print("Side from UE - detJ:", self.det_j)
+        # self.det_j = pithagorean_distance(
+        #     self.points[0].ksi,
+        #     self.points[1].ksi,
+        #     self.points[0].eta,
+        #     self.points[1].eta,
+        # )/2
+        # self.det_j = 0.0125
+        # print("Side from UE - detJ:", self.det_j)
 
 
 class UniversalElement:
     def __init__(self, number_of_points):
         nd_n = 4
         self.nPoints = number_of_points ** 2
-        self.matrix_dNd_Ksi = np.zeros((self.nPoints, self.nPoints))
-        self.matrix_dNd_Eta = np.zeros((self.nPoints, self.nPoints))
+        self.matrix_dN_dKsi = np.zeros((self.nPoints, self.nPoints))
+        self.matrix_dN_dEta = np.zeros((self.nPoints, self.nPoints))
         self.sides = [UniversalElementSide] * 4
 
         for i in range(self.nPoints):
             for j in range(nd_n):
-                self.matrix_dNd_Ksi[i][j] = dN_dKsi(eta[i])[j]
-                self.matrix_dNd_Eta[i][j] = dN_dEta(ksi[i])[j]
+                self.matrix_dN_dKsi[i][j] = dN_dKsi(eta[i])[j]
+                self.matrix_dN_dEta[i][j] = dN_dEta(ksi[i])[j]
 
         for i in range(4):
             self.sides[i] = UniversalElementSide(number_of_points, i)
 
     def display(self):
         print('Matrix dN/dKsi')
-        print_matrix(self.matrix_dNd_Ksi)
+        print_matrix(self.matrix_dN_dKsi)
         print('Matrix dN/dEta')
-        print_matrix(self.matrix_dNd_Eta)
+        print_matrix(self.matrix_dN_dEta)
