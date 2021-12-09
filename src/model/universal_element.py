@@ -38,6 +38,9 @@ class Point:
         # print("Point from UE - ksi:", self.ksi)
         # print("Point from UE - eta:", self.eta)
         # print("Point from UE - w:", self.weight)
+    def __str__(self) -> str:
+        return str(f"ksi={self.ksi} eta={self.eta} w={self.weight}")
+
 
 
 class UniversalElementSide:
@@ -73,19 +76,25 @@ class UniversalElementSide:
 
 class UniversalElement:
     def __init__(self, number_of_points):
-        nd_n = 4
         self.nPoints = number_of_points ** 2
-        self.matrix_dN_dKsi = np.zeros((self.nPoints, self.nPoints))
-        self.matrix_dN_dEta = np.zeros((self.nPoints, self.nPoints))
+        self.matrix_dN_dKsi = np.zeros((self.nPoints, 4))
+        self.matrix_dN_dEta = np.zeros((self.nPoints, 4))
         self.sides = [UniversalElementSide] * 4
-
+        self.points = [Point] * self.nPoints
+        
         for i in range(self.nPoints):
-            for j in range(nd_n):
+            for j in range(4):
                 self.matrix_dN_dKsi[i][j] = dN_dKsi(eta[i])[j]
                 self.matrix_dN_dEta[i][j] = dN_dEta(ksi[i])[j]
 
         for i in range(4):
             self.sides[i] = UniversalElementSide(number_of_points, i)
+
+        self.points[0] = Point(TWO_POINT_KEYS[0], TWO_POINT_KEYS[0], 1)
+        self.points[1] = Point(TWO_POINT_KEYS[1], TWO_POINT_KEYS[0], 1)
+        self.points[2] = Point(TWO_POINT_KEYS[1], TWO_POINT_KEYS[1], 1)
+        self.points[3] = Point(TWO_POINT_KEYS[0], TWO_POINT_KEYS[1], 1)
+
 
     def display(self):
         print('Matrix dN/dKsi')

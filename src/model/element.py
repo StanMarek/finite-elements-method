@@ -7,9 +7,13 @@ class Element:
         self.H = np.zeros((4, 4))
         self.H_bc = np.zeros((4, 4))
         self.P = np.zeros(4)
+        self.C = np.zeros((4, 4))
 
     def set_H(self, H):
         self.H = H
+
+    def set_C(self, C):
+        self.C = C
 
     def set_Hbc(self, Hbc):
         self.H_bc = Hbc

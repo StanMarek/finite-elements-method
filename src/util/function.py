@@ -115,6 +115,7 @@ def multiply_vector_vectort(vector):
 
 def agregation(grid):
     h = np.zeros((grid.nN, grid.nN))
+    c = np.zeros((grid.nN, grid.nN))
     p = np.zeros(grid.nN)
 
     for element_number in range(grid.nE):
@@ -123,7 +124,8 @@ def agregation(grid):
         for i in range(4):
             for j in range(4):
                 h[id[i]-1][id[j]-1] += element.H[i][j] + element.H_bc[i][j]
+                c[id[i]-1][id[j]-1] += element.C[i][j]
 
             p[id[i]-1] += element.P[i]
 
-    return h, p
+    return h, p, c

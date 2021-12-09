@@ -9,3 +9,7 @@ THREE_POINT_VALUES = [(5 / 9), (8 / 9), (5 / 9)]
 K_T = 25
 ALPHA = 300
 T_AMB = 1200
+T_INIT = 100
+C = 700
+RO = 7800
+TIME_STEP = 50

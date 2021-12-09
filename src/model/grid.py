@@ -1,5 +1,6 @@
 from model.element import Element
 from model.node import Node
+from util.const import T_INIT
 
 
 class Grid:
@@ -26,6 +27,7 @@ class Grid:
                 self.nodes[i].set_bc(1)
             if self.nodes[i].y == 0 or self.nodes[i].y == H:
                 self.nodes[i].set_bc(1)
+            self.nodes[i].t = T_INIT
 
         next = 1
         for i in range(len(self.elements)):
