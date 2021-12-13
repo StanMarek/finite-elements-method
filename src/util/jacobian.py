@@ -4,13 +4,16 @@ from model.universal_element import UniversalElement
 
 
 def jacobian(nOfElem, nOfIP, e42d: UniversalElement, grid: Grid):
+    
     dXdKsi = 0.0
     dYdEta = 0.0
     dXdEta = 0.0
     dYdKsi = 0.0
 
-    X = [0, 0.25, 0.25, 0]
-    Y = [0, 0, 0.25, 0.25]
+    # test
+    # X = [0, 0.25, 0.25, 0]
+    # Y = [0, 0, 0.25, 0.25]
+
     for j in range(4):
         # dev
         nodeId = grid.elements[nOfElem].ID[j] - 1
@@ -34,10 +37,11 @@ def jacobian(nOfElem, nOfIP, e42d: UniversalElement, grid: Grid):
     det_j = np.linalg.det(J)
     
     inverse_det_j = 1/det_j
-    transpose_j[0][0] = J[1][1]
-    transpose_j[0][1] = - J[0][1]
-    transpose_j[1][0] = - J[1][0]
-    transpose_j[1][1] = J[0][0]
+    # transpose_j[0][0] = J[1][1]
+    # transpose_j[0][1] = - J[0][1]
+    # transpose_j[1][0] = - J[1][0]
+    # transpose_j[1][1] = J[0][0]
+    transpose_j = np.transpose(J)
 
     for i in range(2):
         for j in range(2):

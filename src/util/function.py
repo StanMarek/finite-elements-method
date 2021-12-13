@@ -6,19 +6,23 @@ from util.const import (THREE_POINT_KEYS, THREE_POINT_VALUES, TWO_POINT_KEYS,
 
 
 def print_matrix(matrix):
+
     np.set_printoptions(precision=5)
     print(np.matrix(matrix))
 
 
 def fun_x(x):
+
     return 5 * x ** 2 + 3 * x + 6
 
 
 def fun_xy(x, y):
+
     return 5 * x ** 2 * y ** 2 + 3 * x * y + 6
 
 
 def gauss_1dim(points):
+
     if points == 2:
         outcome = TWO_POINT_VALUES[0] * fun_x(
             TWO_POINT_KEYS[0]) + TWO_POINT_VALUES[1] * fun_x(TWO_POINT_KEYS[1])
@@ -35,6 +39,7 @@ def gauss_1dim(points):
 
 
 def gauss_2dim(points):
+
     if points == 2:  # 4
         outcome = 0
         for y in range(points):
@@ -57,6 +62,7 @@ def gauss_2dim(points):
 
 
 def dN_dKsi(eta):
+
     return [
         (-0.25 * (1 - eta)),
         (0.25 * (1 - eta)),
@@ -66,6 +72,7 @@ def dN_dKsi(eta):
 
 
 def dN_dEta(ksi):
+
     return [
         (-0.25 * (1 - ksi)),
         (-0.25 * (1 + ksi)),
@@ -75,6 +82,7 @@ def dN_dEta(ksi):
 
 
 def shape_function(ksi, eta):
+
     return [
         (0.25 * (1 - ksi) * (1 - eta)),
         (0.25 * (1 + ksi) * (1 - eta)),
@@ -84,6 +92,7 @@ def shape_function(ksi, eta):
 
 
 def pithagorean_distance(x_1, x_2, y_1, y_2):
+
     x_diff = x_2 - x_1
     y_diff = y_2 - y_1
     return math.sqrt(
@@ -92,6 +101,7 @@ def pithagorean_distance(x_1, x_2, y_1, y_2):
 
 
 def multiply_vector_scalar(vector, scalar):
+
     multiplied = [float] * len(vector)
     for i in range(len(vector)):
         multiplied[i] = vector[i] * scalar
@@ -100,6 +110,7 @@ def multiply_vector_scalar(vector, scalar):
 
     
 def multiply_vector_vectort(vector):
+
     size = len(vector)
     multiplied = np.zeros((size, size))
 
@@ -113,7 +124,17 @@ def multiply_vector_vectort(vector):
     return multiplied
 
 
+def multiply_matrix_scalar(matrix, scalar):
+
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            matrix[i][j] = matrix[i][j] * scalar
+
+    return matrix
+
+
 def agregation(grid):
+    
     h = np.zeros((grid.nN, grid.nN))
     c = np.zeros((grid.nN, grid.nN))
     p = np.zeros(grid.nN)

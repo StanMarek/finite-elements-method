@@ -3,12 +3,13 @@ import numpy as np
 from util.const import K_T, RO, C
 from util.function import multiply_vector_vectort, print_matrix
 
-def calculate_h_for_ip(dNdX, dNdY, dV, nOfIp, el):
+def calculate_h_c_for_ip(dNdX, dNdY, dV, nOfIp, el):
+
     size = 4
     HdNdX = np.zeros((size, size))
     HdNdY = np.zeros((size, size))
     Hi = np.zeros((size, size))
-    Cmat = np.zeros((size, size))
+    Ci = np.zeros((size, size))
 
     # HdNdX = multiply_vector_vectort(dNdX[nOfIp])    
     # HdNdY = multiply_vector_vectort(dNdY[nOfIp])
@@ -17,35 +18,35 @@ def calculate_h_for_ip(dNdX, dNdY, dV, nOfIp, el):
         for j in range(size):
             HdNdX[i][j] = dNdX[nOfIp][i] * dNdX[nOfIp][j]
             HdNdY[i][j] = dNdY[nOfIp][i] * dNdY[nOfIp][j]
+            Ci[i][j] = el.points[nOfIp].N[i] * el.points[nOfIp].N[j]
+
             if el.nPoints == 4:
                 Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV
+                Ci[i][j] = C * RO * Ci[i][j] * dV
+
             elif el.nPoints == 9:
                 if nOfIp < 4:
                     Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV * 5/9 * 5/9
+                    Ci[i][j] = C * RO * Ci[i][j] * dV * 5/9 * 5/9
                 if nOfIp >= 4 and nOfIp < 8:
                     Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV * 8/9 * 5/9
+                    Ci[i][j] = C * RO * Ci[i][j] * dV * 8/9 * 5/9
                 if nOfIp == 8:
                     Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV * 8/9 * 8/9
+                    Ci[i][j] = C * RO * Ci[i][j] * dV * 8/9 * 8/9
 
-            #Hi[i][j] = K_T * Hi[i][j] * dV
-            Cmat[i][j] = el.points[nOfIp].N[i] * el.points[nOfIp].N[j] 
-            Cmat[i][j] = C * RO * Cmat[i][j] * dV * el.points[nOfIp].weight
-
-    # print("C")
-    # print_matrix(Cmat)
-    #print(Hi)
-    return Hi, Cmat
+    return Hi, Ci
 
 
-def calculate_h_for_element(Hi, Ci):
-    H = np.zeros((4, 4))
+def calculate_h_c_for_element(Hi, Ci):
+
+    Hmat = np.zeros((4, 4))
     Cmat = np.zeros((4, 4))
-    # print(len(Ci))
-    # print(len(Hi))
+
     for i in range(4):
         for j in range(4):
             for k in range(len(Hi)):
-                H[i][j] += Hi[k][i][j]
+                Hmat[i][j] += Hi[k][i][j]
                 Cmat[i][j] += Ci[k][i][j]
 
-    return H, Cmat
+    return Hmat, Cmat

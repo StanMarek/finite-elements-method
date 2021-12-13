@@ -4,12 +4,13 @@ from util.const import THREE_POINT_KEYS, THREE_POINT_VALUES, TWO_POINT_KEYS, TWO
 from util.function import (dN_dEta, dN_dKsi, print_matrix,
                                shape_function)
 
+
 eta = [TWO_POINT_KEYS[0], TWO_POINT_KEYS[0],
        TWO_POINT_KEYS[1], TWO_POINT_KEYS[1]]
+
 ksi = [TWO_POINT_KEYS[0], TWO_POINT_KEYS[1],
        TWO_POINT_KEYS[1], TWO_POINT_KEYS[0]]
-# X = [0, 0.025, 0.025, 0]
-# Y = [0, 0, 0.025, 0.025]
+
 
 """
 B - Bottom
@@ -26,6 +27,7 @@ element_side_border = {
 
 
 class Point:
+
     def __init__(self, x, y, v):
         self.ksi = x
         self.eta = y
@@ -34,10 +36,7 @@ class Point:
 
         for i in range(4):
             self.N[i] = shape_function(self.ksi, self.eta)[i]
-        # print("Point from UE - N:", self.N)
-        # print("Point from UE - ksi:", self.ksi)
-        # print("Point from UE - eta:", self.eta)
-        # print("Point from UE - w:", self.weight)
+
 
     def __str__(self) -> str:
         return str(f"ksi={self.ksi} eta={self.eta} w={self.weight}")
@@ -45,6 +44,7 @@ class Point:
 
 
 class UniversalElementSide:
+
     def __init__(self, n_points, side):
         self.number_of_ip = n_points
         self.side_id = side
@@ -137,7 +137,7 @@ class UniversalElement:
             self.points[0] = Point(THREE_POINT_KEYS[0], THREE_POINT_KEYS[0], THREE_POINT_VALUES[0])
             self.points[1] = Point(THREE_POINT_KEYS[2], THREE_POINT_KEYS[0], THREE_POINT_VALUES[2])
             self.points[2] = Point(THREE_POINT_KEYS[2], THREE_POINT_KEYS[2], THREE_POINT_VALUES[2])
-            self.points[3] = Point(THREE_POINT_KEYS[0], THREE_POINT_KEYS[0], THREE_POINT_VALUES[0])
+            self.points[3] = Point(THREE_POINT_KEYS[0], THREE_POINT_KEYS[2], THREE_POINT_VALUES[0])
             self.points[4] = Point(THREE_POINT_KEYS[1], THREE_POINT_KEYS[0], THREE_POINT_VALUES[1])
             self.points[5] = Point(THREE_POINT_KEYS[2], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1])
             self.points[6] = Point(THREE_POINT_KEYS[1], THREE_POINT_KEYS[2], THREE_POINT_VALUES[1])

@@ -6,6 +6,7 @@ from util.function import multiply_vector_vectort
 
 
 def calculate_hbc_for_element(det_j, sides_with_bc, universal_element: UniversalElement):
+
     sides_to_compute = []
     element_hbc = np.zeros((4, 4))
     for side_number in range(4):
@@ -27,9 +28,12 @@ def calculate_hbc_for_element(det_j, sides_with_bc, universal_element: Universal
 
 
 def calculate_hbc_for_side(det_j, side_number: int, element: UniversalElement):
+
     npc = element.nPoints
     side_hbc = np.zeros((4, 4))
+
     if npc == 4:
+
         hbc_point1 = calculate_hbc_for_ip(element.sides[side_number].points[0].N,
                                         element.sides[side_number].points[0].weight)
         hbc_point2 = calculate_hbc_for_ip(element.sides[side_number].points[1].N,
@@ -41,9 +45,7 @@ def calculate_hbc_for_side(det_j, side_number: int, element: UniversalElement):
                                 [j]) * det_j[side_number]
 
     elif npc == 9:
-        # print(element.sides[side_number].points[0].weight)
-        # print(element.sides[side_number].points[1].weight)
-        # print(element.sides[side_number].points[2].weight)
+       
         hbc_point1 = calculate_hbc_for_ip(element.sides[side_number].points[0].N,
                                           element.sides[side_number].points[0].weight)
         hbc_point2 = calculate_hbc_for_ip(element.sides[side_number].points[1].N,
@@ -56,20 +58,15 @@ def calculate_hbc_for_side(det_j, side_number: int, element: UniversalElement):
                 side_hbc[i][j] = ALPHA * (hbc_point1[i][j] + hbc_point2[i][j] + hbc_point3[i][j]) * det_j[side_number]
 
 
-    # print("det J side", det_j[side_number])
-    # print("side hbc")
-    # print_matrix(side_hbc)
-
     return side_hbc
 
 
 def calculate_hbc_for_ip(N, w):
+
     point_hbc = multiply_vector_vectort(N)
+
     for i in range(4):
         for j in range(4):
             point_hbc[i][j] = w * point_hbc[i][j]
-
-    # print("point hbc")
-    # print_matrix(point_hbc)
 
     return point_hbc

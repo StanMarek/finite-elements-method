@@ -4,6 +4,7 @@ from util.const import T_INIT
 
 
 class Grid:
+
     def __init__(self, H, B, nH, nB):
         self.H = H
         self.B = B
@@ -40,54 +41,3 @@ class Grid:
             ids = [id1, id2, id3, id4]
             self.elements[i] = Element(ids)
             next += 1
-
-    def display(self):
-        s = """
-		GRID values:
-		Height: {}, Width: {}
-		NoNodes: {}, NoElems: {}
-		dX: {:.3f}, dY: {:.3f}
-		"""
-        print(s.format(self.H, self.B, self.nN,
-              self.nE, self.delta_x, self.delta_y))
-
-        # print nodes
-        for node in range(len(self.nodes)):
-            print(f"NodeNr:{node+1}\t", self.nodes[node])
-
-        # print elements
-        for element in range(len(self.elements)):
-            print(f"ElemNr:{element+1}\t", self.elements[element])
-
-        columns = self.nB - 1
-        rows = self.nH - 1
-        unit = 5
-        el_id = 0
-        last_elem_in_column = rows - 1
-        rows_start = 0
-        print("B, H " + "-" * 10 + ">")
-        print("|\n" * 4 + "v")
-
-        for _ in range(columns):
-            for r in range(rows):
-                print(('\033[91m'+"{}".format(self.elements[el_id +
-                      r].ID[0]) + '\033[0m' + "- " * unit), end='')
-            print(
-                '\033[91m' + "{}".format(self.elements[last_elem_in_column].ID[3]) + '\033[0m')
-
-            for j in range(unit):
-                if j == (int)(unit/2):
-                    for c in range(rows_start, columns + 1 + rows_start, 1):
-                        print("|" + "  " * int(unit / 2) +
-                              "{}".format(c + 1) + "  " * int(unit / 2), end="")
-                    rows_start += rows
-                print(("|" + "  " * unit) * rows + "|")
-
-            el_id += rows
-            last_elem_in_column += rows
-        for r in range(rows):
-            last_column = (self.nH - 1) * (self.nB - 1) - rows + r
-            print(('\033[91m' + "{}".format(self.elements[last_column].ID[1]
-                                            ) + '\033[0m' + "- " * unit), end='')
-        print('\033[91m' +
-              "{}".format(self.elements[self.nE - 1].ID[2]) + '\033[0m')
