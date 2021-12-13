@@ -1,9 +1,9 @@
 import numpy as np
-
+from termcolor import colored
 from model.element import check_element_boundary_condition
 from model.grid import Grid
 from model.universal_element import UniversalElement
-from util.const import ALPHA, T_AMB, T_INIT, TIME_STEP
+from util.const import ALPHA, T_AMB, T_INIT, TIME_START, TIME_STEP, TIME_STOP
 from util.function import agregation, multiply_vector_scalar, print_matrix
 from util.h_matrix import calculate_h_for_element, calculate_h_for_ip
 from util.hbc_matrix import calculate_hbc_for_element
@@ -20,8 +20,10 @@ def main() -> None:
     #grid = Grid(2, 2, 2, 2)
     #grid.display()
 
-    el = UniversalElement(2)
+    el = UniversalElement(3)
     # el.display()
+
+    #for time in range(TIME_START, TIME_STOP + TIME_STEP, TIME_STEP):
 
     for element_number in range(grid.nE):
         # matrix H for element
@@ -68,16 +70,16 @@ def main() -> None:
     h_global, p_global, c_global = agregation(grid)
     temp = np.linalg.solve(h_global, p_global)
 
-    print("Global H:")
-    print_matrix(h_global)
-    print("Global P:", p_global)
-    print("Temp: ", temp)
-    print("Global C:")
+    # print("Global H:")
+    #print_matrix(h_global)
+    # print("Global P:", p_global)
+    # print("Temp: ", temp)
+    # print("Global C:")
     print_matrix(c_global)
-    np.savetxt("hmatrix.csv", h_global, delimiter=";")
-    np.savetxt("cmatrix.csv", c_global, delimiter=";")
-    np.savetxt("pvector.csv", p_global, delimiter=";")
-    np.savetxt("tempvector.csv", temp, delimiter=";")
+    # np.savetxt("hmatrix.csv", h_global, delimiter=";")
+    # np.savetxt("cmatrix.csv", c_global, delimiter=";")
+    # np.savetxt("pvector.csv", p_global, delimiter=";")
+    # np.savetxt("tempvector.csv", temp, delimiter=";")
 
     t0_vector = []
     for node in range(grid.nN):
@@ -88,9 +90,14 @@ def main() -> None:
     c_dt_t0 = np.matmul(c_dt, t0_vector)
     p_dash = np.add(p_global, c_dt_t0)
 
-    print("H dash:")
-    print_matrix(h_dash)
-    print("P dash:", p_dash)
+    temp = np.linalg.solve(h_dash, p_dash)
+    # print(min(temp))
+    # print(max(temp))
+    for i in range(grid.nN):
+        grid.nodes[i].t = temp[i]
+    
+    # print(colored("time:", "green"), time, colored("\tmin:", "blue"),
+    #         "{:.3f}".format(min(temp)), colored("\tmax:", "red"), "{:.3f}".format(max(temp)))
 
     
 def multiply_matrix_scalar(matrix, scalar):

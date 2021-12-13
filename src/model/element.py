@@ -29,6 +29,7 @@ def check_element_boundary_condition(grid, element_number):
     i = element_number
     side_det_j = np.zeros(4)
     side_choice = np.zeros(4)
+
     if (grid.nodes[grid.elements[i].ID[0]-1].bc == 1 and
             grid.nodes[grid.elements[i].ID[1]-1].bc == 1):
         side_choice[element_side_border["B"]] = 1
@@ -38,6 +39,7 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[0]-1].y,
             grid.nodes[grid.elements[i].ID[1]-1].y
         )/2
+
     if (grid.nodes[grid.elements[i].ID[1]-1].bc == 1 and
             grid.nodes[grid.elements[i].ID[2]-1].bc == 1):
         side_choice[element_side_border["R"]] = 1
@@ -47,6 +49,7 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[1]-1].y,
             grid.nodes[grid.elements[i].ID[2]-1].y
         )/2
+
     if (grid.nodes[grid.elements[i].ID[2]-1].bc == 1 and
             grid.nodes[grid.elements[i].ID[3]-1].bc == 1):
         side_choice[element_side_border["T"]] = 1
@@ -56,6 +59,7 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[2]-1].y,
             grid.nodes[grid.elements[i].ID[3]-1].y
         )/2
+
     if (grid.nodes[grid.elements[i].ID[0]-1].bc == 1 and
             grid.nodes[grid.elements[i].ID[3]-1].bc == 1):
         side_choice[element_side_border["L"]] = 1
@@ -65,5 +69,6 @@ def check_element_boundary_condition(grid, element_number):
             grid.nodes[grid.elements[i].ID[0]-1].y,
             grid.nodes[grid.elements[i].ID[3]-1].y
         )/2
+        
     #print("DET J", side_det_j)
     return side_det_j, side_choice
