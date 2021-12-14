@@ -24,20 +24,25 @@ def simulation(grid: Grid, element: UniversalElement):
         set_of_ci_matrix = []
 
         for integration_point in range(element.nPoints):
+
             j, det_j = jacobian(
-              element_number, integration_point, element, grid)
+              element_number, 
+              integration_point, 
+              element, 
+              grid)
+
             hi_matrix, ci_matrix = calculate_h_c_for_ip(
-                dN_dX(element, j),
-                dN_dY(element, j),
-                det_j,
-                integration_point,
-                element
-            )
+              j,
+              det_j,
+              integration_point,
+              element)
+
             set_of_hi_matrix.append(hi_matrix)
             set_of_ci_matrix.append(ci_matrix)
 
         h_matrix, c_matrix = calculate_h_c_for_element(
           set_of_hi_matrix, set_of_ci_matrix)
+
         grid.elements[element_number].set_H(h_matrix)
         grid.elements[element_number].set_C(c_matrix)
 

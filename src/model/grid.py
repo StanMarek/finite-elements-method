@@ -4,7 +4,23 @@ from util.const import T_INIT
 
 
 class Grid:
-
+    """Grid model
+    Represents wholse set/net of elements and nodes
+    used to caalculate heat distribution. Currently
+    interpreted as rectangular shape
+    
+    Attributes:
+    - H - height of grid
+    - B - width of grid
+    - nH - number of nodes in side walls,
+        number of nodes in H direction
+    - nB - number of nodes in top/bottom walls,
+        number of nodes in B direction
+    - nN - number of nodes in this grid
+    - nE - number of elemenents in this grid 
+    - nodes - array of Nodes, size is nN
+    - elements - array of Elements, size is nE 
+    """
     def __init__(self, H, B, nH, nB):
         self.H = H
         self.B = B
@@ -14,13 +30,14 @@ class Grid:
         self.nE = (nH-1)*(nB-1)
         self.nodes = [Node]*self.nN
         self.elements = [Element]*self.nE
-        self.delta_x = B / (nB - 1)
-        self.delta_y = H / (nH - 1)
+
+        delta_x = B / (nB - 1)
+        delta_y = H / (nH - 1)
 
         node = 0
         for x in range(nB):
             for y in range(nH):
-                self.nodes[node] = Node(x * self.delta_x, y * self.delta_y)
+                self.nodes[node] = Node(x * delta_x, y * delta_y)
                 node += 1
 
         for i in range(self.nN):

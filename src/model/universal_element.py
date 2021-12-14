@@ -5,18 +5,11 @@ from util.function import (dN_dEta, dN_dKsi, print_matrix,
                                shape_function)
 
 
-eta = [TWO_POINT_KEYS[0], TWO_POINT_KEYS[0],
-       TWO_POINT_KEYS[1], TWO_POINT_KEYS[1]]
-
-ksi = [TWO_POINT_KEYS[0], TWO_POINT_KEYS[1],
-       TWO_POINT_KEYS[1], TWO_POINT_KEYS[0]]
-
-
 """
-B - Bottom
-R - Right
-T - Top
-L - Left
+    B - Bottom
+    R - Right
+    T - Top
+    L - Left
 """
 element_side_border = {
     "B": 0,
@@ -27,7 +20,17 @@ element_side_border = {
 
 
 class Point:
+    """Point
+    Represents integration point of universal element,
+    used to calculate change od dimensions/size of element
 
+    Attributes:
+    - ksi - x coordinate in local system - <-1, 1>
+    - eta - y coordinate in local system - <-1, 1>
+    - weight - coefficient of that point, depends on integration schema
+    - N - values of shape functions in that point, array of size 4 -
+        element has 4 shape functions due to 4 nodes, rectangular shape
+    """
     def __init__(self, x, y, v):
         self.ksi = x
         self.eta = y
@@ -42,10 +45,23 @@ class Point:
         return str(f"ksi={self.ksi} eta={self.eta} w={self.weight}")
 
 
-
 class UniversalElementSide:
+    """Universal Element Side
+    Representation of one of four sides of universal element,
+    used in computing the HBC matrix and P vector. Taken as an one 
+    dimensional line.
 
+    Attributes:
+    - number_of_ip = number of integration points on that side 
+    - side_id - id of side:
+        - 0 - bottom
+        - 1 - right
+        - 2 - top
+        - 3 - left
+    - points - array of integration points on this element border 
+    """
     def __init__(self, n_points, side):
+
         self.number_of_ip = n_points
         self.side_id = side
         self.points = [Point] * self.number_of_ip
@@ -87,7 +103,21 @@ class UniversalElementSide:
     
 
 class UniversalElement:
-
+    """Universal Element
+    Represents abstract element in local coordinate system,
+    used to calculate change of dimension/size of element.
+    
+    Attributes:
+    - nPoints - number of integration points in elemen, depends on schema,
+        2 -> 4, 3 -> 9
+    - matrix_dN_dKsi - matrix of shape functions in local system,
+        derivative over ksi - +-0.25(1 +- eta)    
+    - matrix_dN_dEta - matrix of shape functions in local system,
+        derivative over eta - +-0.25(1 +- ksi)
+    - sides - array of UniversalElementSide size 4
+    - points - set of integration points not situated in sides but inside 
+        universal element, array of Point size nPoints    
+    """
     def __init__(self, number_of_points):
 
         self.nPoints = number_of_points ** 2
@@ -134,15 +164,24 @@ class UniversalElement:
                     self.matrix_dN_dKsi[i][j] = dN_dKsi(eta[i])[j]
                     self.matrix_dN_dEta[i][j] = dN_dEta(ksi[i])[j]
 
-            self.points[0] = Point(THREE_POINT_KEYS[0], THREE_POINT_KEYS[0], THREE_POINT_VALUES[0])
-            self.points[1] = Point(THREE_POINT_KEYS[2], THREE_POINT_KEYS[0], THREE_POINT_VALUES[2])
-            self.points[2] = Point(THREE_POINT_KEYS[2], THREE_POINT_KEYS[2], THREE_POINT_VALUES[2])
-            self.points[3] = Point(THREE_POINT_KEYS[0], THREE_POINT_KEYS[2], THREE_POINT_VALUES[0])
-            self.points[4] = Point(THREE_POINT_KEYS[1], THREE_POINT_KEYS[0], THREE_POINT_VALUES[1])
-            self.points[5] = Point(THREE_POINT_KEYS[2], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1])
-            self.points[6] = Point(THREE_POINT_KEYS[1], THREE_POINT_KEYS[2], THREE_POINT_VALUES[1])
-            self.points[7] = Point(THREE_POINT_KEYS[0], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1])
-            self.points[8] = Point(THREE_POINT_KEYS[1], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1])
+            self.points[0] = Point(
+                THREE_POINT_KEYS[0], THREE_POINT_KEYS[0], THREE_POINT_VALUES[0] * THREE_POINT_VALUES[0])
+            self.points[1] = Point(
+                THREE_POINT_KEYS[2], THREE_POINT_KEYS[0], THREE_POINT_VALUES[2] * THREE_POINT_VALUES[0])
+            self.points[2] = Point(
+                THREE_POINT_KEYS[2], THREE_POINT_KEYS[2], THREE_POINT_VALUES[2] * THREE_POINT_VALUES[0])
+            self.points[3] = Point(
+                THREE_POINT_KEYS[0], THREE_POINT_KEYS[2], THREE_POINT_VALUES[0] * THREE_POINT_VALUES[0])
+            self.points[4] = Point(
+                THREE_POINT_KEYS[1], THREE_POINT_KEYS[0], THREE_POINT_VALUES[1] * THREE_POINT_VALUES[0])
+            self.points[5] = Point(
+                THREE_POINT_KEYS[2], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1] * THREE_POINT_VALUES[0])
+            self.points[6] = Point(
+                THREE_POINT_KEYS[1], THREE_POINT_KEYS[2], THREE_POINT_VALUES[1] * THREE_POINT_VALUES[0])
+            self.points[7] = Point(
+                THREE_POINT_KEYS[0], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1] * THREE_POINT_VALUES[0])
+            self.points[8] = Point(
+                THREE_POINT_KEYS[1], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1] * THREE_POINT_VALUES[1])
 
 
     def display(self):

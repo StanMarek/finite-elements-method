@@ -2,14 +2,18 @@ import numpy as np
 
 from util.const import K_T, RO, C
 from util.function import multiply_vector_vectort, print_matrix
+from util.integral import dN_dX, dN_dY
 
-def calculate_h_c_for_ip(dNdX, dNdY, dV, nOfIp, el):
-
+def calculate_h_c_for_ip(jac, dV, nOfIp, el):
+    
     size = 4
     HdNdX = np.zeros((size, size))
     HdNdY = np.zeros((size, size))
     Hi = np.zeros((size, size))
     Ci = np.zeros((size, size))
+
+    dNdX = dN_dX(el, jac)
+    dNdY = dN_dY(el, jac)
 
     # HdNdX = multiply_vector_vectort(dNdX[nOfIp])    
     # HdNdY = multiply_vector_vectort(dNdY[nOfIp])
@@ -25,15 +29,8 @@ def calculate_h_c_for_ip(dNdX, dNdY, dV, nOfIp, el):
                 Ci[i][j] = C * RO * Ci[i][j] * dV
 
             elif el.nPoints == 9:
-                if nOfIp < 4:
-                    Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV * 5/9 * 5/9
-                    Ci[i][j] = C * RO * Ci[i][j] * dV * 5/9 * 5/9
-                if nOfIp >= 4 and nOfIp < 8:
-                    Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV * 8/9 * 5/9
-                    Ci[i][j] = C * RO * Ci[i][j] * dV * 8/9 * 5/9
-                if nOfIp == 8:
-                    Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV * 8/9 * 8/9
-                    Ci[i][j] = C * RO * Ci[i][j] * dV * 8/9 * 8/9
+                Hi[i][j] = K_T * (HdNdX[i][j] + HdNdY[i][j]) * dV * el.points[nOfIp].weight
+                Ci[i][j] = C * RO * Ci[i][j] * dV * el.points[nOfIp].weight
 
     return Hi, Ci
 

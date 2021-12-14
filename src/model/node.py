@@ -1,6 +1,15 @@
 
 class Node:
-    
+    """Node class
+    Represents the most basic thing to caculate heat/thermal
+    distribution in project
+
+    Attributes:
+    - x 
+    - y
+    - bc - boundary condidtion
+    - t - temperature
+    """
     def __init__(self, x, y):
         self.x = x
         self.y = y

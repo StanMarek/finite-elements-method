@@ -4,7 +4,7 @@ from model.universal_element import UniversalElement
 
 
 def jacobian(nOfElem, nOfIP, e42d: UniversalElement, grid: Grid):
-    
+
     dXdKsi = 0.0
     dYdEta = 0.0
     dXdEta = 0.0

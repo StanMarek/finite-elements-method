@@ -1,8 +1,21 @@
 import numpy as np
 from model.universal_element import element_side_border
 from util.function import pithagorean_distance
-class Element:
 
+
+class Element:
+    """Element class
+    Represents set of 4 nodes with their IDs.
+    Used to calculate global matrices used in simulation.
+    Element has 4 sides and can be any rectangular shape
+
+    Attributes:
+    - ID - ids of 4 nodes
+    - H - h matrix
+    - H_bc - h boundary condidtion matrix
+    - P - p vector - load vector - wektor obciążeń
+    - C - c matrix  
+    """
     def __init__(self, id):
         self.ID = id
         self.H = np.zeros((4, 4))
