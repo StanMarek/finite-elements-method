@@ -27,7 +27,7 @@ def dNi_dY(e42d: UniversalElement, jac, nOfIP):
 def dN_dX(e42d: UniversalElement, jac):
 
     ip = e42d.nPoints
-    dNdX = [[] for j in range(ip)]
+    dNdX = np.zeros((ip, 4))
 
     for i in range(ip):
         dNdX[i] = dNi_dX(e42d, jac, i)
@@ -38,7 +38,7 @@ def dN_dX(e42d: UniversalElement, jac):
 def dN_dY(e42d: UniversalElement, jac):
     
     ip = e42d.nPoints
-    dNdY = [[] for j in range(ip)]
+    dNdY = np.zeros((ip, 4))
 
     for i in range(ip):
         dNdY[i] = dNi_dY(e42d, jac, i)

@@ -4,7 +4,7 @@ from model.universal_element import UniversalElement
 from util.const import TIME_START, TIME_STEP, TIME_STOP
 import numpy as np
 from termcolor import colored
-from util.function import agregation, multiply_matrix_scalar
+from util.function import add_matrices, add_vectors, agregation, multiply_matrix_scalar, solve_system
 
 from util.h_c_matrix import calculate_h_c_for_element, calculate_h_c_for_ip
 from util.hbc_matrix import calculate_hbc_for_element
@@ -54,25 +54,25 @@ def simulation(grid: Grid, element: UniversalElement):
         grid.elements[element_number].set_P(p)
 
     h_global, p_global, c_global = agregation(grid)
-    temp = np.linalg.solve(h_global, p_global)
+    temp = solve_system(h_global, p_global)
 
-    t0_vector = []
     for node in range(grid.nN):
-        t0_vector.append(grid.nodes[node].t)
+      temp[node] = grid.nodes[node].t
 
     c_dt = multiply_matrix_scalar(c_global, 1/TIME_STEP)
-    h_dash = np.add(h_global, c_dt)
-    c_dt_t0 = np.matmul(c_dt, t0_vector)
-    p_dash = np.add(p_global, c_dt_t0)
-    temp = np.linalg.solve(h_dash, p_dash)
+    c_dt_t0 = np.matmul(c_dt, temp)
+
+    h_global = add_matrices(h_global, c_dt)
+    p_global = add_vectors(p_global, c_dt_t0)
+    temp = solve_system(h_global, p_global)
 
     for i in range(grid.nN):
-        grid.nodes[i].t = temp[i]
+      grid.nodes[i].t = temp[i]
 
-    save_to_file("Hg", h_global, time)
-    save_to_file("Cg", c_global, time)
-    save_to_file("Pg", p_global, time)
-    save_to_file("Temp", temp, time)
+    # save_to_file("Hg", h_global, time)
+    # save_to_file("Cg", c_global, time)
+    # save_to_file("Pg", p_global, time)
+    # save_to_file("Temp", temp, time)
 
     print(colored("time:", "green"), time, colored("\tmin:", "blue"),
             "{:.3f}".format(min(temp)), colored("\tmax:", "red"), "{:.3f}".format(max(temp)))
