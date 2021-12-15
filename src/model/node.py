@@ -21,6 +21,3 @@ class Node:
 
     def set_t(self, t):
         self.t = t
-
-    def __str__(self) -> str:
-        return str("x={:.3f} y={:.3f} bc={}".format(self.x, self.y, self.bc))

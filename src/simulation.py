@@ -19,7 +19,7 @@ def simulation(grid: Grid, element: UniversalElement):
 
     for element_number in range(grid.nE):
 
-        # matrix H for element
+        # matrix H and C for element
         set_of_hi_matrix = []
         set_of_ci_matrix = []
 
@@ -50,6 +50,7 @@ def simulation(grid: Grid, element: UniversalElement):
         det_j_sides, side_choice = grid.elements[element_number].check_element_boundary_condition(grid)
         h_bc = calculate_hbc_for_element(det_j_sides, side_choice, element)
         p = calculate_p_for_element(det_j_sides, side_choice, element)
+
         grid.elements[element_number].set_Hbc(h_bc)
         grid.elements[element_number].set_P(p)
 

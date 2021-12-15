@@ -35,9 +35,6 @@ class Element:
     def set_P(self, P):
         self.P = P
 
-    def __str__(self) -> str:
-        return str(f"id1={self.ID[0]} id2={self.ID[1]} id3={self.ID[2]} id4={self.ID[3]}")
-
     def check_element_boundary_condition(self, grid):
 
         side_det_j = np.zeros(4)

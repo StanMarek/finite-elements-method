@@ -4,6 +4,7 @@ from util.const import K_T, RO, C
 from util.function import add_matrices, multiply_matrix_scalar, multiply_vector_vectort, print_matrix
 from util.integral import dN_dX, dN_dY
 
+
 def calculate_h_c_for_ip(jac, dV, nOfIp, el):
     
     size = 4
@@ -15,7 +16,7 @@ def calculate_h_c_for_ip(jac, dV, nOfIp, el):
     dNdX = dN_dX(el, jac)
     dNdY = dN_dY(el, jac)
 
-    # 1
+    # 2
     HdNdX = multiply_vector_vectort(dNdX[nOfIp])    
     HdNdY = multiply_vector_vectort(dNdY[nOfIp])
     Hi = add_matrices(HdNdX, HdNdY)
@@ -24,7 +25,7 @@ def calculate_h_c_for_ip(jac, dV, nOfIp, el):
     Hi = multiply_matrix_scalar(Hi, K_T * dV * el.points[nOfIp].weight)
     Ci = multiply_matrix_scalar(Ci, RO * C * dV * el.points[nOfIp].weight)
 
-    # 2
+    # 1
     # for i in range(size):
     #     for j in range(size):
     #         HdNdX[i][j] = dNdX[nOfIp][i] * dNdX[nOfIp][j]

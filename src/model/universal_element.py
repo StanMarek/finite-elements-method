@@ -182,11 +182,3 @@ class UniversalElement:
                 THREE_POINT_KEYS[0], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1] * THREE_POINT_VALUES[0])
             self.points[8] = Point(
                 THREE_POINT_KEYS[1], THREE_POINT_KEYS[1], THREE_POINT_VALUES[1] * THREE_POINT_VALUES[1])
-
-
-    def display(self):
-
-        print('Matrix dN/dKsi')
-        print_matrix(self.matrix_dN_dKsi)
-        print('Matrix dN/dEta')
-        print_matrix(self.matrix_dN_dEta)

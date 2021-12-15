@@ -11,56 +11,6 @@ def print_matrix(matrix):
     print(np.matrix(matrix))
 
 
-def fun_x(x):
-
-    return 5 * x ** 2 + 3 * x + 6
-
-
-def fun_xy(x, y):
-
-    return 5 * x ** 2 * y ** 2 + 3 * x * y + 6
-
-
-def gauss_1dim(points):
-
-    if points == 2:
-        outcome = TWO_POINT_VALUES[0] * fun_x(
-            TWO_POINT_KEYS[0]) + TWO_POINT_VALUES[1] * fun_x(TWO_POINT_KEYS[1])
-        return outcome
-
-    elif points == 3:
-        outcome = THREE_POINT_VALUES[0] * fun_x(THREE_POINT_KEYS[0]) + THREE_POINT_VALUES[1] * fun_x(
-            THREE_POINT_KEYS[1]) + THREE_POINT_VALUES[2] * fun_x(THREE_POINT_KEYS[2])
-        return outcome
-
-    else:
-        print('Wrong points input')
-        return -math.inf
-
-
-def gauss_2dim(points):
-
-    if points == 2:  # 4
-        outcome = 0
-        for y in range(points):
-            for x in range(points):
-                outcome += TWO_POINT_VALUES[x] * TWO_POINT_VALUES[y] * \
-                    fun_xy(THREE_POINT_KEYS[x], THREE_POINT_KEYS[y])
-        return outcome
-
-    elif points == 3:  # 9
-        outcome = 0
-        for y in range(points):
-            for x in range(points):
-                outcome += THREE_POINT_VALUES[x] * THREE_POINT_VALUES[y] * fun_xy(THREE_POINT_KEYS[x],
-                                                                                  THREE_POINT_VALUES[y])
-        return outcome
-
-    else:
-        print('Wrong points input')
-        return -math.inf
-
-
 def dN_dKsi(eta):
 
     return [
@@ -111,6 +61,7 @@ def pithagorean_distance(x_1, x_2, y_1, y_2):
         pow(x_diff, 2) + pow(y_diff, 2)
     )
 
+
 def add_matrices(*matrices):
     # numpy.add(matrices)
     size = len(matrices[0])
@@ -151,6 +102,7 @@ def multiply_matrix_scalar(matrix, scalar):
             matrix[i][j] = matrix[i][j] * scalar
 
     return matrix
+
 
 def add_vectors(*vectors): 
     # numpy.add(vectors)

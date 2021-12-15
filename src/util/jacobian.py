@@ -28,7 +28,7 @@ def jacobian(nOfElem, nOfIP, e42d: UniversalElement, grid: Grid):
 
     
     J = np.zeros((2, 2))
-    transpose_j = np.zeros((2, 2))
+    inverse_j = np.zeros((2, 2))
     J[0][0] = dXdKsi
     J[0][1] = dYdKsi
     J[1][0] = dXdEta
