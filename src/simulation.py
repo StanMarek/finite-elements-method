@@ -4,7 +4,7 @@ from model.universal_element import UniversalElement
 from util.const import TIME_START, TIME_STEP, TIME_STOP
 import numpy as np
 from termcolor import colored
-from util.function import add_matrices, add_vectors, agregation, multiply_matrix_scalar, solve_system
+from util.function import add_matrices, add_vectors, agregation, multiply_matrix_vector, multiply_matrix_scalar, solve_system
 
 from util.h_c_matrix import calculate_h_c_for_element, calculate_h_c_for_ip
 from util.hbc_matrix import calculate_hbc_for_element
@@ -61,7 +61,7 @@ def simulation(grid: Grid, element: UniversalElement):
       temp[node] = grid.nodes[node].t
 
     c_dt = multiply_matrix_scalar(c_global, 1/TIME_STEP)
-    c_dt_t0 = np.matmul(c_dt, temp)
+    c_dt_t0 = multiply_matrix_vector(c_dt, temp)
 
     h_global = add_matrices(h_global, c_dt)
     p_global = add_vectors(p_global, c_dt_t0)

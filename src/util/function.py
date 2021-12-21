@@ -104,6 +104,19 @@ def multiply_matrix_scalar(matrix, scalar):
     return matrix
 
 
+def multiply_matrix_vector(X, Y):
+
+    rows = len(X[0])
+    columns = len(Y)
+    result = np.zeros(rows)
+
+    for i in range(rows):
+        for j in range(columns):
+            result[i] += X[i][j] * Y[j]
+
+    return result
+
+
 def add_vectors(*vectors): 
     # numpy.add(vectors)
     size = len(vectors[0])
