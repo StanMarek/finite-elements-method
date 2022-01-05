@@ -35,6 +35,9 @@ class Element:
     def set_P(self, P):
         self.P = P
 
+    def __repr__(self) -> str:
+        return f"{self.ID}"
+
     def check_element_boundary_condition(self, grid):
 
         side_det_j = np.zeros(4)
@@ -80,6 +83,7 @@ class Element:
                 grid.nodes[self.ID[3]-1].y
             )/2
 
+        # print(side_choice)
         return side_det_j, side_choice
 
 

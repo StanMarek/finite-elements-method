@@ -13,12 +13,12 @@ def calculate_h_c_for_ip(jac, dV, nOfIp, el):
     Hi = np.zeros((size, size))
     Ci = np.zeros((size, size))
 
-    dNdX = dN_dX(el, jac)
-    dNdY = dN_dY(el, jac)
+    dNdX = dN_dX(el, jac)[nOfIp]
+    dNdY = dN_dY(el, jac)[nOfIp]
 
     # 2
-    HdNdX = multiply_vector_vectort(dNdX[nOfIp])    
-    HdNdY = multiply_vector_vectort(dNdY[nOfIp])
+    HdNdX = multiply_vector_vectort(dNdX)    
+    HdNdY = multiply_vector_vectort(dNdY)
     Hi = add_matrices(HdNdX, HdNdY)
     Ci = multiply_vector_vectort(el.points[nOfIp].N)
 

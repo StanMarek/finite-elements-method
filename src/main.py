@@ -6,27 +6,18 @@ import time
 
 def main() -> None:
 
-    grid = Grid(0.1, 0.1, 4, 4)
+    # grid = Grid(0.1, 0.1, 4, 4)
+    grid = Grid("init.txt")
     # grid = Grid(0.1, 0.1, 31, 31)
-
-    SCHEMA = 2
-    element = UniversalElement(SCHEMA)
-
-    print(colored("Liczba punktów całkowania:", "magenta"), SCHEMA)
-    t = time.time()
-    simulation(grid, element)
-    t = time.time() - t
-    print("Czas symulacji:", t) 
-
-    grid = Grid(0.1, 0.1, 4, 4)
+    print(grid)
 
     SCHEMA = 3
     element = UniversalElement(SCHEMA)
 
     print(colored("Liczba punktów całkowania:", "magenta"), SCHEMA)
-    t = time.time()
+    t = time.perf_counter()
     simulation(grid, element)
-    t = time.time() - t
+    t = time.perf_counter() - t
     print("Czas symulacji:", t) 
 
 
