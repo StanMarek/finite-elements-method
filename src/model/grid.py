@@ -3,7 +3,7 @@ import numpy as np
 from numpy.lib.shape_base import split
 from model.element import Element
 from model.node import Node
-from util.const import T_INIT
+from util.const import T_INIT, TIME_STOP
 
 
 class Grid:
@@ -11,7 +11,7 @@ class Grid:
     Represents wholse set/net of elements and nodes
     used to caalculate heat distribution. Currently
     interpreted as rectangular shape
-    
+
     Attributes:
     - H - height of grid
     - B - width of grid
@@ -25,6 +25,7 @@ class Grid:
     - elements - array of Elements, size is nE 
     """
     # def __init__(self, H, B, nH, nB):
+
     def __init__(self, *args):
 
         if len(args) > 1:
@@ -63,7 +64,7 @@ class Grid:
                 ids = [id1, id2, id3, id4]
                 self.elements[i] = Element(ids)
                 next += 1
-            
+
         else:
             with open(args[0]) as f:
                 lines = f.readlines()
@@ -71,11 +72,11 @@ class Grid:
             nodes_index = 0
             elements_index = 0
             bc_index = 0
-            
+
             split = []
             for line in lines:
                 split.append(line.split())
-            
+
             for i in range(len(split)):
                 # print(split[i][0])
                 if split[i][0] == "*Node" or split[i][0] == "*Node,":
@@ -84,17 +85,35 @@ class Grid:
                     elements_index = i
                 if split[i][0] == "*BC" or split[i][0] == "*BC,":
                     bc_index = i
+                # if split[i][0] == "SimulationTime":
+                #     print(type(int(split[i][1])))
+                #     global T_STOP
+                #     T_STOP = int(split[i][1])
+                #     print(TIME_STOP)
+                # if split[i][0] == "SimulationStepTime":
+                #     bc_index = i
+                # if split[i][0] == "Conductivity":
+                #     bc_index = i
+                # if split[i][0] == "Alfa":
+                #     bc_index = i
+                # if split[i][0] == "Tot":
+                #     bc_index = i
+                # if split[i][0] == "InitialTemp":
+                #     bc_index = i
+                # if split[i][0] == "Density":
+                #     bc_index = i
+                # if split[i][0] == "SpecificHeat":
+                #     bc_index = i
 
             nodes = split[nodes_index + 1:elements_index]
             elements = split[elements_index + 1:bc_index]
             condition = split[bc_index + 1:]
             condition = np.reshape(condition, len(condition[0]))
-            
 
             for i in range(len(nodes)):
                 for j in range(len(nodes[i])):
                     if nodes[i][j][len(nodes[i][j]) - 1] == ",":
-                        nodes[i][j] = nodes[i][j][:-1] 
+                        nodes[i][j] = nodes[i][j][:-1]
                     nodes[i][j] = float(nodes[i][j])
                     nodes[i][0] = int(nodes[i][0])
 
@@ -108,7 +127,6 @@ class Grid:
                 if condition[i][len(condition[i]) - 1] == ",":
                     condition[i] = condition[i][:-1]
                 condition[i] = int(condition[i])
-                
 
             self.nN = len(nodes)
             self.nE = len(elements)
@@ -121,7 +139,7 @@ class Grid:
                 y = node[2]
                 self.nodes[id] = Node(x, y)
                 # print(self.nodes[id])
-            
+
             for bc in condition:
                 node = int(bc) - 1
                 self.nodes[node].set_bc(1)
@@ -145,9 +163,7 @@ class Grid:
     # def from_dictionary(cls, datadict):
     #     return cls(datadict.items())
 
-
     # @classmethod
     # def from_file(cls, filename):
     #     data = open(filename).readlines()
     #     return cls(data)
-
